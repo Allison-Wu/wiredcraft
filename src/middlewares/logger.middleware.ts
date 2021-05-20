@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { pick } from 'lodash';
-import { Logger } from 'src/helper/logger';
+import { Logger } from '../helper/logger';
 
 export const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (req.path !== '/health') {

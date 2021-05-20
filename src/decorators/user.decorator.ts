@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { badRequest } from 'src/middlewares/http-exception.filter';
+import { badRequest } from '../middlewares/http-exception.filter';
 
 export const User = createParamDecorator((field: string, ctx: ExecutionContext) => {
   const req = ctx.switchToHttp().getRequest();

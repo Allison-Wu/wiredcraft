@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
-import { ApiFieldDocValidate } from 'src/decorators/api-response-decorators';
-import { EditableRecord } from 'src/helper/editable-mongo-accessor';
+import { ApiFieldDocValidate } from '../decorators/api-response-decorators';
+import { EditableRecord } from '../helper/editable-mongo-accessor';
 
 export class User extends EditableRecord {
   @ApiFieldDocValidate('test', 'The user name')
@@ -18,4 +18,6 @@ export class User extends EditableRecord {
   @ApiFieldDocValidate('description', 'The description of user')
   @IsString()
   description: string;
+
+  cognitoId?: string;
 }

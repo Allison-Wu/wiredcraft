@@ -5,7 +5,7 @@ import {
 import dayjs from 'dayjs';
 
 import { MongoAccessor } from './mongo-accessor';
-import { ApiFieldDocValidate } from 'src/decorators/api-response-decorators';
+import { ApiProperty } from '@nestjs/swagger';
 
 export abstract class EditableMongoAccessor<T extends EditableRecord> extends MongoAccessor<T> {
   private operator: string;
@@ -84,7 +84,10 @@ export abstract class EditableMongoAccessor<T extends EditableRecord> extends Mo
 }
 
 export class EditableRecord {
-  @ApiFieldDocValidate('ObjectId("603cb5c5d7afac001e7f6f0f")', 'Book id')
+  @ApiProperty({
+    example: 'ObjectId("603cb5c5d7afac001e7f6f0f")',
+    description: 'record id'
+  })
   _id?: ObjectId;
 
   deleted?: boolean;

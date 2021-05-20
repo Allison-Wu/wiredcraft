@@ -1,5 +1,5 @@
-import { EditableMongoAccessor } from 'src/helper/editable-mongo-accessor';
-import { Logger } from 'src/helper/logger';
+import { EditableMongoAccessor } from '../helper/editable-mongo-accessor';
+import { Logger } from '../helper/logger';
 import { mongoUri } from '../configs';
 import { User } from './user.model';
 
