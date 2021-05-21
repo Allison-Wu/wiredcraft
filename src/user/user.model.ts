@@ -1,6 +1,7 @@
 import { IsString } from 'class-validator';
 import { ApiFieldDocValidate } from '../decorators/api-response-decorators';
 import { EditableRecord } from '../helper/editable-mongo-accessor';
+import { Point } from '@turf/turf';
 
 export class User extends EditableRecord {
   @ApiFieldDocValidate('test', 'The user name')
@@ -11,9 +12,14 @@ export class User extends EditableRecord {
   @IsString()
   dob: string;
 
-  @ApiFieldDocValidate('address', 'The address of user')
-  @IsString()
-  address: string;
+  @ApiFieldDocValidate({
+    type: 'Point',
+    coordinates: [
+      113.0307213,
+      28.2341038
+    ]
+  }, 'address')
+  address?: Point;
 
   @ApiFieldDocValidate('description', 'The description of user')
   @IsString()

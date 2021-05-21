@@ -1,9 +1,9 @@
-import * as Axios from 'axios';
-import * as Lru from 'lru-cache';
-import * as _ from 'lodash';
-import * as dayjs from 'dayjs';
-import * as jwkToPem from 'jwk-to-pem';
-import * as jwt from 'jsonwebtoken';
+import Axios from 'axios';
+import Lru from 'lru-cache';
+import _ from 'lodash';
+import dayjs from 'dayjs';
+import jwkToPem from 'jwk-to-pem';
+import jwt from 'jsonwebtoken';
 import { User } from '../user/user.model';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { UserModule } from '../user/user.module';
@@ -98,7 +98,7 @@ export class AuthGuard implements CanActivate {
     const cacheJwks = jwkCache.get(cacheKey);
     if (cacheJwks) return cacheJwks;
   
-    const { data: jwks } = await Axios.default.get(
+    const { data: jwks } = await Axios.get(
       `https://cognito-idp.${awsRegion}.amazonaws.com/${cognitoPoolId}/.well-known/jwks.json`
     );
     jwkCache.set(cacheKey, jwks);
