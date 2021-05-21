@@ -1,11 +1,12 @@
-import { Body, Param } from '@nestjs/common';
-import { ApiAllInOne, HTTPMethod } from '../decorators/api-response-decorators';
+import { Body, Param, Query } from '@nestjs/common';
+import { ApiAllInOne, ApiAllInOneWithPagination, HTTPMethod } from '../decorators/api-response-decorators';
 
 import { ApiDocAndRoute } from '../decorators/common-decorators';
 import { User } from '../decorators/user.decorator';
 import { User as UserType } from './user.model';
 import { UserService } from './user.service';
 import { ObjectId } from 'mongodb';
+import { NearByUserReqDTO } from './dto/user-req.dto';
 
 @ApiDocAndRoute('user')
 export class UserController {
@@ -54,5 +55,16 @@ export class UserController {
     @User('_id') userId: ObjectId,
   ) {
     return UserService.deleteOne(userId);
+  }
+
+  @ApiAllInOneWithPagination(
+    'Get near by list by user name',
+    'Return the near by list.',
+    UserType, HTTPMethod.GET, 'nearby'
+  )
+  async findAllFollower(
+    @Query() query: NearByUserReqDTO,
+  ) {
+    return UserService.nearBy(query);
   }
 }
