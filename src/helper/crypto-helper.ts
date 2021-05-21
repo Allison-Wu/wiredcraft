@@ -13,3 +13,13 @@ export const decodeFromBase64 = <T = any>(value: string, defaultObject: T) => {
 };
 
 export const encodeToBase64 = (value: any) => Buffer.from(JSON.stringify(value)).toString('base64');
+
+export const formatScrollId = (data: any[], total: number, skip = 0, limit = 30) => {
+  if ((skip + data.length) >= total) {
+    return null;
+  } else {
+    return encodeToBase64({ skip: skip + limit, limit });
+  }
+};
+
+export const decodeScrollId = (scrollId) => decodeFromBase64(scrollId, { skip: 0, limit: 30 });
