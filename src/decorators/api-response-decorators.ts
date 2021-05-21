@@ -6,7 +6,8 @@ import {
 } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiProperty, ApiResponse, ApiResponseOptions, getSchemaPath } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
-import { PaginationRespDTO } from 'src/app.dto';
+import { PaginationRespDTO } from '../app.dto';
+import { AuthGuard } from '../guards/auth.guard';
 
 export enum HTTPMethod {
   DELETE = 'DELETE',
@@ -40,7 +41,7 @@ export const ApiAllInOne = (
   responseStatus = 200,
   ...decorators: (ClassDecorator | MethodDecorator | PropertyDecorator)[]
 ) => {
-  // if (shouldAuth) decorators.push(UseGuards(AuthGuard));
+  if (shouldAuth) decorators.push(UseGuards(AuthGuard));
   return applyDecorators(
     httpMethodsMapper.get(httpMethod)(path),
     ApiOperation({ summary: operationSummary }),
@@ -62,7 +63,7 @@ export const ApiAllInOneWithPagination = <TModel extends Type<any>>(
   shouldAuth = true,
   ...decorators: (ClassDecorator | MethodDecorator | PropertyDecorator)[]
 ) => {
-  // if (shouldAuth) decorators.push(UseGuards(AuthGuard));
+  if (shouldAuth) decorators.push(UseGuards(AuthGuard));
   const options: ApiResponseOptions = {
     status: 200,
     description: respDesc,
