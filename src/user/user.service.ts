@@ -1,7 +1,7 @@
 import { UserModule } from './user.module';
 import { ObjectId } from 'mongodb';
 import { User } from './user.model';
-import { decodeFromBase64, encodeToBase64 } from '../helper/crypto-helper';
+import { decodeScrollId, formatScrollId } from '../helper/crypto-helper';
 import { PaginationRespDTO } from 'src/app.dto';
 import { NearByUserReqDTO } from './dto/user-req.dto';
 import { badRequest } from 'src/middlewares/http-exception.filter';
@@ -29,9 +29,7 @@ export class UserService {
     if (!user) throw badRequest('Invalid user name!');
     if (!user.address) return new PaginationRespDTO([], null, 0);
 
-    const defaultLimit = 30;
-    const { skip, limit } = decodeFromBase64(query.scrollId, { skip: 0, limit: defaultLimit });
-    
+    const { skip, limit } = decodeScrollId(query.scrollId);
     const { data, count: total } = await UserModule.instance.getWithCount({
       location: {
         $nearSphere: user.address,
@@ -40,13 +38,7 @@ export class UserService {
       }
     });
 
-    let scrollId: string;
-    if ((skip + data.length) >= total) {
-      scrollId = null;
-    } else {
-      scrollId = encodeToBase64({ skip: skip + limit, limit });
-    }
-
+    const scrollId = formatScrollId(data, total, skip, limit);
     return new PaginationRespDTO(data, scrollId, total);
   }
 }

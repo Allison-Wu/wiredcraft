@@ -1,25 +1,15 @@
 import { RelationModule } from './relation.module';
 import { ObjectId } from 'mongodb';
 import { RelationReqDTO } from './dto/relation-req.dto';
-import { decodeFromBase64, encodeToBase64 } from '../helper/crypto-helper';
+import { decodeScrollId, formatScrollId } from '../helper/crypto-helper';
 import { RelationStatus } from './relation.model';
 import { PaginationRespDTO } from 'src/app.dto';
 import _ from 'lodash';
 import { RelationRespDTO } from './dto/relation-resp.dto';
 
-const defaultLimit = 30;
-
-const formatScrollId = (data: RelationRespDTO[], total: number, skip = 0, limit = defaultLimit) => {
-  if ((skip + data.length) >= total) {
-    return null;
-  } else {
-    return encodeToBase64({ skip: skip + limit, limit });
-  }
-};
-
 export class RelationService {
   static async findAllFollower(query: RelationReqDTO, requestUserId: ObjectId) {
-    const { skip, limit } = decodeFromBase64(query.scrollId, { skip: 0, limit: defaultLimit });
+    const { skip, limit } = decodeScrollId(query.scrollId);
 
     const { data: followerRelations, count: total } = await RelationModule.instance.getWithCount(
       { followingUserId: new ObjectId(query.userId) || requestUserId, status: RelationStatus.FOLLOWING }, { skip, limit },
@@ -45,8 +35,7 @@ export class RelationService {
   }
 
   static async findAllFollowing(query: RelationReqDTO, requestUserId: ObjectId) {
-    const defaultLimit = 30;
-    const { skip, limit } = decodeFromBase64(query.scrollId, { skip: 0, limit: defaultLimit });
+    const { skip, limit } = decodeScrollId(query.scrollId);
     const { data: followingRelations, count: total } = await RelationModule.instance.getWithCount(
       { userId: new ObjectId(query.userId) || requestUserId, status: RelationStatus.FOLLOWING }, { skip, limit },
     );
